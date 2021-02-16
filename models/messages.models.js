@@ -1,4 +1,3 @@
-const { connect } = require("../app");
 const connection = require("../db/connection");
 
 exports.selectMessages = () => {
