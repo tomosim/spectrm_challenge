@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "setup-dbs": "psql -f db/setup.sql"
+    "setup-dbs": "psql -f db/setup.sql",
+    "migrate-latest": "knex migrate:latest",
+    "migrate-rollback": "knex migrate:rollback"
   },
   "keywords": [],
   "author": "",
