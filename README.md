@@ -39,7 +39,7 @@ npm install
 npm start
 ```
 
-5. The server will now be running locally and is listening on port 9090. Head on over to `localhost:9090` in your browser or a development tool like [Postman](https://www.postman.com/downloads/) or [Insomnia](https://insomnia.rest/). Here you will see a list of the available endpoints you can query with examples of inputs and outputs.
+5. The server will now be running locally and is listening on port 9090. Head on over to `localhost:9090/api` in your browser or a development tool like [Postman](https://www.postman.com/downloads/) or [Insomnia](https://insomnia.rest/). Here you will see a list of the available endpoints you can query with examples of inputs and outputs.
 
 6. Have fun!
 

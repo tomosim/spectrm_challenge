@@ -1,0 +1,38 @@
+{
+  "GET /api": {
+    "description": "Responds with a json representation of all the available endpoints of the api."
+  },
+  
+    "GET /api/messages":{"description":"Responds with a list of all messages in the database","example response": {
+      "messages": [{
+        "id": "5d304f18-4d26-469a-a470-ca91e4d9b9aa",
+        "content": "Ledge nose-bump Grind King alley oop blunt nosepicker downhill darkslide. Indy grab nose slide melancholy skate key grind alley oop sick.",
+        "retrieval_count": 0
+      },
+      {
+        "id": "eaff823e-4a15-410e-b62b-1f146d760be3",
+        "content":"Nose lip flypaper nosebone nose-bump. Jim Phillips bruised heel sketchy handplant half-cab hard flip.",
+        "retrieval_count": 0
+      }
+    ]
+    }
+  },
+  
+    "POST /api/messages":{"description":"","example body": {"content": "My new message :)"},"example response": {
+      "id": "57fds567-s6k2-p09s-ss22-1d949abca9ea",
+      "content": "Ledge nose-bump Grind King alley oop blunt nosepicker downhill darkslide. Indy grab nose slide melancholy skate key grind alley oop sick.",
+      "retrieval_count": 0
+    }
+},
+    "GET /api/messages/:message_id":{"description":"Responds with a single message based on the ID you provide. It will also increment the 'retrieval_count' property of the specified message","example response": {
+      "message": {"id": "5d304f18-4d26-469a-a470-ca91e4d9b9aa",
+        "content": "Ledge nose-bump Grind King alley oop blunt nosepicker downhill darkslide. Indy grab nose slide melancholy skate key grind alley oop sick.",
+        "retrieval_count": 1}
+    }
+},
+    "PATCH /api/messages/:message_id":{"description":"Takes a new message content and updates the message in the database with your changes. Will respond with the newly updated message", "example body": {"content": "I'm updating this message :)"}, "example response": {"message":{"id": "I'm updating this message :)",
+      "retrieval_count": 1}}
+},
+    "DELETE /api/messages/:message_id":{"description":"Deletes the message specified by the message_id you provide. Responds with a 204 status code."
+}
+}

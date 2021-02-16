@@ -7,6 +7,6 @@ exports.seed = function (knex) {
       return knex.migrate.latest();
     })
     .then(() => {
-      knex("messages").insert(messages);
+      return knex("messages").insert(messages);
     });
 };
