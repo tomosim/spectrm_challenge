@@ -19,9 +19,7 @@ describe("/api", () => {
           .get("/api/messages")
           .expect(200)
           .then((res) => {
-            console.log(res.body.messages);
             res.body.messages.forEach((message) => {
-              console.log(message);
               expect(message).to.have.all.keys([
                 "id",
                 "content",
