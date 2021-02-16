@@ -33,6 +33,12 @@ cd spectrm_challenge
 npm install
 ```
 
+4. Next you need to setup the database and seed it:
+
+```sh
+npm run setup-dbs && npm run seed-dev
+```
+
 4. Start the server using the following script:
 
 ```sh
