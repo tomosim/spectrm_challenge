@@ -35,23 +35,32 @@ describe("/api", () => {
           .post("/api/messages")
           .send({ content: "test message" })
           .expect(201)
-          .then((req) => {
-            expect(req.body.message).to.have.all.keys([
+          .then((res) => {
+            expect(res.body.message).to.have.all.keys([
               "id",
               "content",
               "retrieval_count",
             ]);
-            expect(req.body.message.content).to.equal("test message");
+            expect(res.body.message.content).to.equal("test message");
           });
       });
       // ERRORS
+      it("400 - No message content provided", () => {
+        return request(app)
+          .post("/api/messages")
+          .send({})
+          .expect(400)
+          .then((res) => {
+            expect(res.body.msg).to.equal("No message content provided");
+          });
+      });
       it("400 - contains HTML tags", () => {
         return request(app)
           .post("/api/messages")
           .send({ content: "<h1>test message</h1>" })
           .expect(400)
-          .then((req) => {
-            expect(req.body.msg).to.equal("Message cannot contain HTML tags");
+          .then((res) => {
+            expect(res.body.msg).to.equal("Message cannot contain HTML tags");
           });
       });
       it("400 - content too long (max 255 char)", () => {
@@ -62,8 +71,8 @@ describe("/api", () => {
               "Skate ipsum dolor sit amet, axle noseblunt slide soul skate Tracker. Nose slide pressure flip Jai Alai Banks boned out lip. Invert slap maxwell kickflip ollie hole. Skater 1080 wheels poseur. Slob air tailslide Burnside rail slide gap. Darkslide egg plant.",
           })
           .expect(400)
-          .then((req) => {
-            expect(req.body.msg).to.equal(
+          .then((res) => {
+            expect(res.body.msg).to.equal(
               "Maximum message length exceeded (255)"
             );
           });
@@ -142,10 +151,78 @@ describe("/api", () => {
           });
       });
       // ERRORS
-      // 404 id not found
-      // 400 not uuid
-      // 400 contains HTML
+      it("404 - responds with 'message not found' when given a non-existant ID", () => {
+        const fake_id = "2b6357ab-0613-454f-ad96-c36749104d78";
+        return request(app)
+          .patch(`/api/messages/${fake_id}`)
+          .send({ content: "updated message" })
+          .expect(404)
+          .then((res) => {
+            expect(res.body.msg).to.equal("Message not found");
+          });
+      });
+      it('400 - responds with "Incorrect format for message ID"', () => {
+        const bad_id = "123";
+        return request(app)
+          .patch(`/api/messages/${bad_id}`)
+          .send({ content: "updated message" })
+          .expect(400)
+          .then((res) => {
+            expect(res.body.msg).to.equal("Incorrect format for message ID");
+          });
+      });
+      it("400 - contains HTML tags", () => {
+        return request(app)
+          .post("/api/messages")
+          .send({ content: "test message" })
+          .then((res) => {
+            const ID = res.body.message.id;
+            return request(app)
+              .patch(`/api/messages/${ID}`)
+              .send({ content: "<h1>test message</h1>" })
+              .expect(400);
+          })
+          .then((res) => {
+            expect(res.body.msg).to.equal("Message cannot contain HTML tags");
+          });
+      });
       // 400 too long
+      it("400 - content too long (max 255 char)", () => {
+        return request(app)
+          .post("/api/messages")
+          .send({ content: "test message" })
+          .then((res) => {
+            const ID = res.body.message.id;
+            return request(app)
+              .patch(`/api/messages/${ID}`)
+              .send({
+                content:
+                  "Skate ipsum dolor sit amet, axle noseblunt slide soul skate Tracker. Nose slide pressure flip Jai Alai Banks boned out lip. Invert slap maxwell kickflip ollie hole. Skater 1080 wheels poseur. Slob air tailslide Burnside rail slide gap. Darkslide egg plant.",
+              })
+              .expect(400);
+          })
+          .then((res) => {
+            expect(res.body.msg).to.equal(
+              "Maximum message length exceeded (255)"
+            );
+          });
+      });
+      // 400 empty
+      it("400 - No message content provided", () => {
+        return request(app)
+          .post("/api/messages")
+          .send({ content: "test message" })
+          .then((res) => {
+            const ID = res.body.message.id;
+            return request(app)
+              .patch(`/api/messages/${ID}`)
+              .send({})
+              .expect(400);
+          })
+          .then((res) => {
+            expect(res.body.msg).to.equal("No message content provided");
+          });
+      });
     });
     describe("DELETE", () => {
       // ERRORS

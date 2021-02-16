@@ -12,11 +12,16 @@ exports.insertMessage = (message) => {
       msg: "Message cannot contain HTML tags",
       status: 400,
     });
+  } else if (message.content === undefined) {
+    return Promise.reject({
+      msg: "No message content provided",
+      status: 400,
+    });
   } else
     return connection("messages")
       .insert(message)
       .returning("*")
-      .then((messages) => messages[0]);
+      .then(([message]) => message);
 };
 
 exports.selectSingleMessage = (id) => {
@@ -33,9 +38,25 @@ exports.selectSingleMessage = (id) => {
 };
 
 exports.updateSingleMessage = (id, content) => {
-  return connection("messages")
-    .where({ id })
-    .update({ content })
-    .returning("*")
-    .then((messages) => messages[0]);
+  const htmlTag = /<.+?>/;
+  if (htmlTag.test(content) === true) {
+    return Promise.reject({
+      msg: "Message cannot contain HTML tags",
+      status: 400,
+    });
+  } else if (content === undefined) {
+    return Promise.reject({
+      msg: "No message content provided",
+      status: 400,
+    });
+  } else
+    return connection("messages")
+      .where({ id })
+      .update({ content })
+      .returning("*")
+      .then(([message]) => {
+        if (message === undefined) {
+          return Promise.reject({ status: 404, msg: "Message not found" });
+        } else return message;
+      });
 };

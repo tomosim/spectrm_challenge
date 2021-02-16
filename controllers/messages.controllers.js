@@ -5,12 +5,12 @@ const {
   updateSingleMessage,
 } = require("../models/messages.models.js");
 
-exports.sendMessages = (req, res) => {
+exports.sendMessages = (req, res, next) => {
   selectMessages()
     .then((messages) => {
       res.send({ messages });
     })
-    .catch(console.log);
+    .catch(next);
 };
 
 exports.addMessage = (req, res, next) => {
