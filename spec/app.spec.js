@@ -14,7 +14,7 @@ describe("/api", () => {
   });
   describe("/messages", () => {
     describe("GET", () => {
-      it("200 - responds with an array of message objects", () => {
+      it("200 - Responds with an array of message objects", () => {
         return request(app)
           .get("/api/messages")
           .expect(200)
@@ -30,7 +30,7 @@ describe("/api", () => {
       });
     });
     describe("POST", () => {
-      it("201 - adds a message to the DB and reponds with that message", () => {
+      it("201 - Adds a message to the DB and responds with that message", () => {
         return request(app)
           .post("/api/messages")
           .send({ content: "test message" })
@@ -45,7 +45,7 @@ describe("/api", () => {
           });
       });
       // ERRORS
-      it("400 - No message content provided", () => {
+      it("400 - Responds with an error when no message content is provided", () => {
         return request(app)
           .post("/api/messages")
           .send({})
@@ -54,7 +54,7 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("No message content provided");
           });
       });
-      it("400 - contains HTML tags", () => {
+      it("400 - Responds with an error when the content contains HTML tags", () => {
         return request(app)
           .post("/api/messages")
           .send({ content: "<h1>test message</h1>" })
@@ -63,7 +63,7 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Message cannot contain HTML tags");
           });
       });
-      it("400 - content too long (max 255 char)", () => {
+      it("400 - Responds with an error when the content is too long", () => {
         return request(app)
           .post("/api/messages")
           .send({
@@ -81,7 +81,7 @@ describe("/api", () => {
   });
   describe("/messages/:id", () => {
     describe("GET", () => {
-      it("200 - when given a message ID it responds with that specific message", () => {
+      it("200 - Responds with a specific message when given its message ID ", () => {
         return request(app)
           .post("/api/messages")
           .send({ content: "test message" })
@@ -97,7 +97,7 @@ describe("/api", () => {
             expect(res.body.message.content).to.equal("test message");
           });
       });
-      it("200 - increases the retrieval count each time a message is requested", () => {
+      it("200 - Increases the retrieval count by one each time a message is requested", () => {
         return request(app)
           .post("/api/messages")
           .send({ content: "test message" })
@@ -115,7 +115,7 @@ describe("/api", () => {
           });
       });
       // ERRORS
-      it("404 - responds with 'message not found' when given a non-existant ID", () => {
+      it("404 - Responds with an error when the ID does not exist", () => {
         const fake_id = "2b6357ab-0613-454f-ad96-c36749104d78";
         return request(app)
           .get(`/api/messages/${fake_id}`)
@@ -124,7 +124,7 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Message not found");
           });
       });
-      it('400 - responds with "Incorrect format for message ID"', () => {
+      it('400 - Responds with "Incorrect format for message ID"', () => {
         const bad_id = "123";
         return request(app)
           .get(`/api/messages/${bad_id}`)
@@ -135,7 +135,7 @@ describe("/api", () => {
       });
     });
     describe("PATCH", () => {
-      it("200 - accepts a new message content and responds with the updated message", () => {
+      it("200 - Accepts a new message content and responds with the updated message", () => {
         return request(app)
           .post("/api/messages")
           .send({ content: "test message" })
@@ -151,7 +151,7 @@ describe("/api", () => {
           });
       });
       // ERRORS
-      it("404 - responds with 'message not found' when given a non-existant ID", () => {
+      it("404 - Responds with an error when the ID does not exist", () => {
         const fake_id = "2b6357ab-0613-454f-ad96-c36749104d78";
         return request(app)
           .patch(`/api/messages/${fake_id}`)
@@ -161,7 +161,7 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Message not found");
           });
       });
-      it('400 - responds with "Incorrect format for message ID"', () => {
+      it("400 - Responds with an error when the ID is not a UUID", () => {
         const bad_id = "123";
         return request(app)
           .patch(`/api/messages/${bad_id}`)
@@ -171,7 +171,7 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Incorrect format for message ID");
           });
       });
-      it("400 - contains HTML tags", () => {
+      it("400 - Responds with an error when the content contains HTML tags", () => {
         return request(app)
           .post("/api/messages")
           .send({ content: "test message" })
@@ -186,7 +186,7 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Message cannot contain HTML tags");
           });
       });
-      it("400 - content too long (max 255 char)", () => {
+      it("400 - Responds with an error when the content is too long", () => {
         return request(app)
           .post("/api/messages")
           .send({ content: "test message" })
@@ -206,7 +206,7 @@ describe("/api", () => {
             );
           });
       });
-      it("400 - No message content provided", () => {
+      it("400 - Responds with an error when no message content is provided", () => {
         return request(app)
           .post("/api/messages")
           .send({ content: "test message" })
@@ -233,7 +233,7 @@ describe("/api", () => {
           });
       });
       // ERRORS
-      it("404 - responds with an error when the ID does not exist", () => {
+      it("404 - Responds with an error when the ID does not exist", () => {
         const fake_id = "2b6357ab-0613-454f-ad96-c36749104d78";
         return request(app)
           .delete(`/api/messages/${fake_id}`)
