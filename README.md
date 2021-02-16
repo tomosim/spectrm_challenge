@@ -65,4 +65,3 @@ npm test
 - [Supertest](https://www.npmjs.com/package/supertest)
 - [Chai](chaijs.com)
 - [Mocha](mochajs.org/)
-- [Nodemon](nodemon.io)
