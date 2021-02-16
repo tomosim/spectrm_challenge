@@ -45,7 +45,7 @@ describe("/api", () => {
           });
       });
       // ERRORS
-      it("400 - contains HMTML tags", () => {
+      it("400 - contains HTML tags", () => {
         return request(app)
           .post("/api/messages")
           .send({ content: "<h1>test message</h1>" })
@@ -72,11 +72,75 @@ describe("/api", () => {
   });
   describe("/messages/:id", () => {
     describe("GET", () => {
+      it("200 - when given a message ID it responds with that specific message", () => {
+        return request(app)
+          .post("/api/messages")
+          .send({ content: "test message" })
+          .then((res) => {
+            const ID = res.body.message.id;
+            return Promise.all([
+              ID,
+              request(app).get(`/api/messages/${ID}`).expect(200),
+            ]);
+          })
+          .then(([ID, res]) => {
+            expect(res.body.message.id).to.equal(ID);
+            expect(res.body.message.content).to.equal("test message");
+          });
+      });
+      it("200 - increases the retrieval count each time a message is requested", () => {
+        return request(app)
+          .post("/api/messages")
+          .send({ content: "test message" })
+          .then((res) => {
+            const ID = res.body.message.id;
+            return request(app).get(`/api/messages/${ID}`);
+          })
+          .then((res) => {
+            expect(res.body.message.retrieval_count).to.equal(1);
+            const ID = res.body.message.id;
+            return request(app).get(`/api/messages/${ID}`);
+          })
+          .then((res) => {
+            expect(res.body.message.retrieval_count).to.equal(2);
+          });
+      });
       // ERRORS
-      // 404 id not found
-      // 400 not uuid
+      it("404 - responds with 'message not found' when given a non-existant ID", () => {
+        const fake_id = "2b6357ab-0613-454f-ad96-c36749104d78";
+        return request(app)
+          .get(`/api/messages/${fake_id}`)
+          .expect(404)
+          .then((res) => {
+            expect(res.body.msg).to.equal("Message not found");
+          });
+      });
+      it('400 - responds with "Incorrect format for message ID"', () => {
+        const bad_id = "123";
+        return request(app)
+          .get(`/api/messages/${bad_id}`)
+          .expect(400)
+          .then((res) => {
+            expect(res.body.msg).to.equal("Incorrect format for message ID");
+          });
+      });
     });
     describe("PATCH", () => {
+      it("200 - accepts a new message content and responds with the updated message", () => {
+        return request(app)
+          .post("/api/messages")
+          .send({ content: "test message" })
+          .then((res) => {
+            const ID = res.body.message.id;
+            return request(app)
+              .patch(`/api/messages/${ID}`)
+              .send({ content: "updated message" })
+              .expect(200);
+          })
+          .then((res) => {
+            expect(res.body.message.content).to.equal("updated message");
+          });
+      });
       // ERRORS
       // 404 id not found
       // 400 not uuid
