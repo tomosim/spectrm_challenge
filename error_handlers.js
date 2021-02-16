@@ -21,3 +21,11 @@ exports.handlePSQLErrors = (err, req, res, next) => {
     next(err);
   }
 };
+
+exports.containsHTML = (req, res, next) => {
+  const htmlTag = /<.+?>/;
+  const message = req.body.content;
+  if (htmlTag.test(message)) {
+    next({ msg: "Message cannot contain HTML tags", status: 400 });
+  } else next();
+};

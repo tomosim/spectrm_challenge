@@ -6,12 +6,7 @@ exports.selectMessages = () => {
 
 exports.insertMessage = (message) => {
   const htmlTag = /<.+?>/;
-  if (htmlTag.test(message.content) === true) {
-    return Promise.reject({
-      msg: "Message cannot contain HTML tags",
-      status: 400,
-    });
-  } else if (message.content === undefined) {
+  if (message.content === undefined) {
     return Promise.reject({
       msg: "No message content provided",
       status: 400,
@@ -37,13 +32,7 @@ exports.selectMessage = (id) => {
 };
 
 exports.updateMessage = (id, content) => {
-  const htmlTag = /<.+?>/;
-  if (htmlTag.test(content) === true) {
-    return Promise.reject({
-      msg: "Message cannot contain HTML tags",
-      status: 400,
-    });
-  } else if (content === undefined) {
+  if (content === undefined) {
     return Promise.reject({
       msg: "No message content provided",
       status: 400,

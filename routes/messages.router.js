@@ -7,11 +7,13 @@ const {
   removeMessage,
 } = require("../controllers/messages.controllers");
 
-messagesRouter.route("/").get(sendMessages).post(addMessage);
+const { containsHTML } = require("../error_handlers");
+
+messagesRouter.route("/").get(sendMessages).post(containsHTML, addMessage);
 messagesRouter
   .route("/:message_id")
   .get(sendMessage)
-  .patch(patchMessage)
+  .patch(containsHTML, patchMessage)
   .delete(removeMessage);
 
 module.exports = messagesRouter;
