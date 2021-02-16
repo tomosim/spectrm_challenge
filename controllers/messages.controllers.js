@@ -3,6 +3,7 @@ const {
   insertMessage,
   selectSingleMessage,
   updateSingleMessage,
+  deleteSingleMessage,
 } = require("../models/messages.models.js");
 
 exports.sendMessages = (req, res, next) => {
@@ -37,6 +38,15 @@ exports.patchSingleMessage = (req, res, next) => {
   updateSingleMessage(message_id, content)
     .then((message) => {
       res.send({ message });
+    })
+    .catch(next);
+};
+
+exports.removeSingleMessage = (req, res, next) => {
+  const { message_id } = req.params;
+  deleteSingleMessage(message_id)
+    .then(() => {
+      res.status(204).send();
     })
     .catch(next);
 };

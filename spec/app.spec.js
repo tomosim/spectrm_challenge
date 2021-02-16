@@ -186,7 +186,6 @@ describe("/api", () => {
             expect(res.body.msg).to.equal("Message cannot contain HTML tags");
           });
       });
-      // 400 too long
       it("400 - content too long (max 255 char)", () => {
         return request(app)
           .post("/api/messages")
@@ -207,7 +206,6 @@ describe("/api", () => {
             );
           });
       });
-      // 400 empty
       it("400 - No message content provided", () => {
         return request(app)
           .post("/api/messages")
@@ -225,9 +223,34 @@ describe("/api", () => {
       });
     });
     describe("DELETE", () => {
+      it("204 - deletes the message", () => {
+        return request(app)
+          .post("/api/messages")
+          .send({ content: "test message" })
+          .then((res) => {
+            const ID = res.body.message.id;
+            return request(app).delete(`/api/messages/${ID}`).expect(204);
+          });
+      });
       // ERRORS
-      // 404 id not found
-      // 400 not uuid
+      it("404 - responds with an error when the ID does not exist", () => {
+        const fake_id = "2b6357ab-0613-454f-ad96-c36749104d78";
+        return request(app)
+          .delete(`/api/messages/${fake_id}`)
+          .expect(404)
+          .then((res) => {
+            expect(res.body.msg).to.equal("Message not found");
+          });
+      });
+      it("400 - Responds with an error when the ID is not a UUID", () => {
+        const bad_id = "123";
+        return request(app)
+          .delete(`/api/messages/${bad_id}`)
+          .expect(400)
+          .then((res) => {
+            expect(res.body.msg).to.equal("Incorrect format for message ID");
+          });
+      });
     });
   });
 });

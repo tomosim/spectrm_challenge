@@ -60,3 +60,14 @@ exports.updateSingleMessage = (id, content) => {
         } else return message;
       });
 };
+
+exports.deleteSingleMessage = (id) => {
+  return connection("messages")
+    .where({ id })
+    .delete()
+    .then((rows) => {
+      if (rows === 0) {
+        return Promise.reject({ status: 404, msg: "Message not found" });
+      } else return;
+    });
+};
