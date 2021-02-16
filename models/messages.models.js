@@ -5,17 +5,10 @@ exports.selectMessages = () => {
 };
 
 exports.insertMessage = (message) => {
-  const htmlTag = /<.+?>/;
-  if (message.content === undefined) {
-    return Promise.reject({
-      msg: "No message content provided",
-      status: 400,
-    });
-  } else
-    return connection("messages")
-      .insert(message)
-      .returning("*")
-      .then(([message]) => message);
+  return connection("messages")
+    .insert(message)
+    .returning("*")
+    .then(([message]) => message);
 };
 
 exports.selectMessage = (id) => {
@@ -32,21 +25,15 @@ exports.selectMessage = (id) => {
 };
 
 exports.updateMessage = (id, content) => {
-  if (content === undefined) {
-    return Promise.reject({
-      msg: "No message content provided",
-      status: 400,
+  return connection("messages")
+    .where({ id })
+    .update({ content })
+    .returning("*")
+    .then(([message]) => {
+      if (message === undefined) {
+        return Promise.reject({ status: 404, msg: "Message not found" });
+      } else return message;
     });
-  } else
-    return connection("messages")
-      .where({ id })
-      .update({ content })
-      .returning("*")
-      .then(([message]) => {
-        if (message === undefined) {
-          return Promise.reject({ status: 404, msg: "Message not found" });
-        } else return message;
-      });
 };
 
 exports.deleteMessage = (id) => {

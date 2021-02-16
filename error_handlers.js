@@ -29,3 +29,13 @@ exports.containsHTML = (req, res, next) => {
     next({ msg: "Message cannot contain HTML tags", status: 400 });
   } else next();
 };
+
+exports.hasNoContent = (req, res, next) => {
+  const message = req.body.content;
+  if (message === undefined) {
+    return next({
+      msg: "No message content provided",
+      status: 400,
+    });
+  } else next();
+};
