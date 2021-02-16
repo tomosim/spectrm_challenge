@@ -1,2 +1,4 @@
 DROP DATABASE IF EXISTS messages;
+DROP DATABASE IF EXISTS messages_test;
 CREATE DATABASE messages;
+CREATE DATABASE messages_test;
