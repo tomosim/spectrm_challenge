@@ -1,6 +1,6 @@
-// Update with your config settings.
+const ENV = process.env.NODE_ENV || "development";
 
-module.exports = {
+const dbConfig = {
   development: {
     client: "pg",
     connection: {
@@ -32,3 +32,5 @@ module.exports = {
     },
   },
 };
+
+module.exports = dbConfig[ENV];
