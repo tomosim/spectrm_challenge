@@ -1,9 +1,9 @@
 const {
   selectMessages,
   insertMessage,
-  selectSingleMessage,
-  updateSingleMessage,
-  deleteSingleMessage,
+  selectMessage,
+  updateMessage,
+  deleteMessage,
 } = require("../models/messages.models.js");
 
 exports.sendMessages = (req, res, next) => {
@@ -23,28 +23,28 @@ exports.addMessage = (req, res, next) => {
     .catch(next);
 };
 
-exports.sendSingleMessage = (req, res, next) => {
+exports.sendMessage = (req, res, next) => {
   const { message_id } = req.params;
-  selectSingleMessage(message_id)
+  selectMessage(message_id)
     .then((message) => {
       res.send({ message });
     })
     .catch(next);
 };
 
-exports.patchSingleMessage = (req, res, next) => {
+exports.patchMessage = (req, res, next) => {
   const { content } = req.body;
   const { message_id } = req.params;
-  updateSingleMessage(message_id, content)
+  updateMessage(message_id, content)
     .then((message) => {
       res.send({ message });
     })
     .catch(next);
 };
 
-exports.removeSingleMessage = (req, res, next) => {
+exports.removeMessage = (req, res, next) => {
   const { message_id } = req.params;
-  deleteSingleMessage(message_id)
+  deleteMessage(message_id)
     .then(() => {
       res.status(204).send();
     })

@@ -24,7 +24,7 @@ exports.insertMessage = (message) => {
       .then(([message]) => message);
 };
 
-exports.selectSingleMessage = (id) => {
+exports.selectMessage = (id) => {
   return connection("messages")
     .increment("retrieval_count") // Not a fan of multiple queries to the DB here but I'm unsure of how else to achieve this.
     .then(() => {
@@ -37,7 +37,7 @@ exports.selectSingleMessage = (id) => {
     });
 };
 
-exports.updateSingleMessage = (id, content) => {
+exports.updateMessage = (id, content) => {
   const htmlTag = /<.+?>/;
   if (htmlTag.test(content) === true) {
     return Promise.reject({
@@ -61,7 +61,7 @@ exports.updateSingleMessage = (id, content) => {
       });
 };
 
-exports.deleteSingleMessage = (id) => {
+exports.deleteMessage = (id) => {
   return connection("messages")
     .where({ id })
     .delete()
