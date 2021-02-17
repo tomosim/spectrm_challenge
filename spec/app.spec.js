@@ -114,6 +114,24 @@ describe("/api", () => {
             expect(res.body.message.retrieval_count).to.equal(2);
           });
       });
+      it("200 - Doesn't increase the retrieval count of other messages", () => {
+        return request(app)
+          .get("/api/messages")
+          .then((res) => {
+            return Promise.all([
+              res.body.messages[0].id,
+              request(app).get(`/api/messages/${res.body.messages[1].id}`),
+              request(app).get(`/api/messages/${res.body.messages[1].id}`),
+            ]);
+          })
+          .then(([id]) => {
+            return request(app).get(`/api/messages/${id}`);
+          })
+          .then((res) => {
+            expect(res.body.message.retrieval_count).to.equal(1);
+            expect(res.body.message.retrieval_count).to.not.equal(2);
+          });
+      });
       // ERRORS
       it("404 - Responds with an error when the ID does not exist", () => {
         const fake_id = "2b6357ab-0613-454f-ad96-c36749104d78";

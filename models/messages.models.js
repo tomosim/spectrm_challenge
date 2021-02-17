@@ -13,7 +13,8 @@ exports.insertMessage = (message) => {
 
 exports.selectMessage = (id) => {
   return connection("messages")
-    .increment("retrieval_count") // Not a fan of multiple queries to the DB here but I'm unsure of how else to achieve this.
+    .increment("retrieval_count")
+    .where({ id }) // Not a fan of multiple queries to the DB here but I'm unsure of how else to achieve this.
     .then(() => {
       return connection("messages").first("*").where({ id });
     })
